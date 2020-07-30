@@ -2,9 +2,10 @@ package cn.caishen.system.controller.role;
 
 import cn.caishen.domain.domain.po.Role;
 import cn.caishen.domain.utils.LbMap;
-import cn.caishen.system.controller.BaseController;
 import cn.caishen.system.service.role.RoleService;
 import com.github.pagehelper.PageInfo;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -16,9 +17,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/roleService")
-public class RoleController extends BaseController {
+public class RoleController /*extends BaseController*/ {
 
     //private final static Logger logger = (Logger) LoggerFactory.getLogger(RoleController.class);
+    protected static Logger logger = LogManager.getLogger(RoleController.class);
 
     @Autowired
     private RoleService roleService;
