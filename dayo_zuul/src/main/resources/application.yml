@@ -54,6 +54,7 @@ ribbon:
 zuul:
   ignoredServices: '*' #忽略所有未配置的service
   ignore-security-headers: false  #不忽略框架与权限相关的头信息
+
   routes:
     dayo-worklog:
       path: /worklog/**

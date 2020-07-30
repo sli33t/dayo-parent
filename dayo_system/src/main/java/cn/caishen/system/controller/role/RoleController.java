@@ -43,7 +43,8 @@ public class RoleController /*extends BaseController*/ {
      * @return
      */
     @GetMapping(value = "/findAll")
-    public LbMap findAll(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int limit, @RequestParam(defaultValue = "") String jsonStr){
+    public LbMap findAll(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int limit,
+                         @RequestParam(defaultValue = "") String jsonStr){
         try {
             LbMap map = LbMap.fromObject(jsonStr);
             logger.info(jsonStr + "||" + map.toString());
