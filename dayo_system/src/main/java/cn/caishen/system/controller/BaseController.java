@@ -23,10 +23,10 @@ public class BaseController {
 
     protected static Logger logger = LogManager.getLogger(BaseController.class);
 
-    //protected HttpServletRequest request;
+    protected HttpServletRequest request;
 
-    @Autowired
-    private HttpServletRequest request;
+    /*@Autowired
+    private HttpServletRequest request;*/
 
     protected HttpServletResponse response;
     protected HttpSession session;
@@ -42,8 +42,8 @@ public class BaseController {
     private UserService userService;
 
     @ModelAttribute
-    public void init(HttpServletResponse response, HttpSession session){
-        //this.request = request;
+    public void init(HttpServletRequest request, HttpServletResponse response, HttpSession session){
+        this.request = request;
         this.response = response;
         this.session = session;
 
