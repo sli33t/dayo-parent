@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>工作日志</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" href="../static/css/layui.css">
+
+    <style type="text/css">
+        .color{
+            color: #666666 !important;
+        }
+        .width{
+            width: 76%;
+        }
+        .left{
+            margin-left: 100px;
+        }
+
+        .font-color{
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 5px;">
+        <legend>客户反馈单</legend>
+    </fieldset>
+
+    <div>
+        <form class="layui-form layui-form-pane" action="" style="margin-top: 10px;">
+            <input type="hidden" id="userId" name="feedbackId" th:value="${feedback.feedbackId}">
+            <input type="hidden" id="rowVersion" name="rowVersion" th:value="${feedback.rowVersion}">
+
+            <div class="layui-form-item left" style="margin-top: 50px;">
+                <label class="layui-form-label font-color">客户名称</label>
+                <div class="layui-input-inline" style="width: 60%; margin-right: -1px;">
+                    <input type="text" id="name" lay-verify="required" placeholder="请点击选择客户" autocomplete="off" class="layui-input layui-disabled color" readonly="readonly" th:value="${feedback.customerName}">
+                    <input type="hidden" id="id" name="customerId" th:value="${feedback.customerId}">
+                </div>
+                <div class="layui-input-inline">
+                    <span>
+                        <button type="button" class="layui-btn layui-btn-normal" lay-filter="customerFilter" onclick="customerFilter()">选择客户</button>
+                    </span>
+                </div>
+            </div>
+
+            <div class="layui-form-item left">
+                <div class="layui-col-xs4">
+                    <div class="layui-block">
+                        <label class="layui-form-label">联系电话</label>
+                        <div class="layui-input-block width">
+                            <input type="text" id="telNo" autocomplete="off" class="layui-input layui-disabled color" readonly="readonly" th:value="${feedback.telNo}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-col-xs4">
+                    <div class="layui-block">
+                        <label class="layui-form-label">所属区域</label>
+                        <div class="layui-input-block width">
+                            <input type="text" id="areaName" autocomplete="off" class="layui-input layui-disabled color" readonly="readonly" th:value="${feedback.areaName}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item left">
+                <div class="layui-col-xs4">
+                    <div class="layui-block">
+                        <label class="layui-form-label">邮箱</label>
+                        <div class="layui-input-block width">
+                            <input type="text" id="email" autocomplete="off" class="layui-input layui-disabled color" readonly="readonly" th:value="${feedback.email}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-col-xs4">
+                    <div class="layui-block">
+                        <label class="layui-form-label">程序版本</label>
+                        <div class="layui-input-block width">
+                            <input type="text" id="version" autocomplete="off" class="layui-input layui-disabled color" readonly="readonly" th:value="${feedback.versionName}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item left">
+                <div class="layui-col-xs4">
+                    <!--<div class="layui-block">
+                        <label class="layui-form-label">问题类型</label>
+                        <div class="layui-input-block width">
+                            <input type="radio" name="problemType" lay-verify="required" value="0" title="需求" th:field="${feedback.problemType}" style="width: 60%">
+                            <input type="radio" name="problemType" lay-verify="required" value="1" title="bug" th:field="${feedback.problemType}" checked="" style="width: 60%">
+                        </div>
+                    </div>-->
+
+                    <div class="layui-block">
+                        <label class="layui-form-label font-color">问题类型</label>
+                        <div class="layui-input-block layui-form width"><!--筛选条件下拉主要要有 layui-form-->
+                            <select name="problemType" lay-verify="required" lay-search="" id="problemType" th:field="${feedback.problemType}">
+                                <!--<option value="">直接选择或搜索选择</option>-->
+                                <option th:selected="${feedback.problemType=='0'}" value="0">需求</option>
+                                <option th:selected="${feedback.problemType=='1'}" value="1" selected="selected">bug</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-col-xs4">
+                    <div class="layui-block">
+                        <label class="layui-form-label font-color">反馈类型</label>
+                        <div class="layui-input-block layui-form width"><!--筛选条件下拉主要要有 layui-form-->
+                            <select name="feedbackType" lay-verify="required" lay-search="" id="feedbackType" th:field="${feedback.feedbackType}">
+                                <!--<option value="">直接选择或搜索选择</option>-->
+                                <option th:selected="${feedback.feedbackType=='0'}" value="0" selected="selected">内部反馈</option>
+                                <option th:selected="${feedback.feedbackType=='1'}" value="1">客户反馈</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item left" pane="" style="width: 62%;">
+                <div class="layui-block">
+                    <label class="layui-form-label font-color">优先级别</label>
+                    <div class="layui-input-block width">
+                        <input type="radio" name="priority" lay-verify="required" value="0" title="紧急" th:field="${feedback.priority}">
+                        <input type="radio" name="priority" lay-verify="required" value="1" title="高" th:field="${feedback.priority}" checked="">
+                        <input type="radio" name="priority" lay-verify="required" value="2" title="中" th:field="${feedback.priority}">
+                        <input type="radio" name="priority" lay-verify="required" value="3" title="低" th:field="${feedback.priority}">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item left">
+                <div class="layui-block">
+                    <label class="layui-form-label font-color">要求日期</label>
+                    <div class="layui-input-inline">
+                        <!-- -->
+                        <input type="text" name="requireDate" id="requireDate" lay-verify="date" placeholder="请选择要求完成日期" autocomplete="off" class="layui-input" th:value="${#dates.format(feedback.requireDate, 'yyyy-MM-dd')}">
+                    </div>
+                </div>
+
+                <!--<div class="layui-upload">
+                    <button type="button" class="layui-btn" id="uploadImg">多图片上传</button>
+                    <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px; width: 70%">
+                        预览图：
+                        <div class="layui-upload-list" id="showImg" style="height: 120px;"></div>
+                    </blockquote>
+                </div>-->
+            </div>
+
+
+
+            <div class="layui-form-item layui-form-text left" style="width: 70%;">
+                <label class="layui-form-label font-color">反馈内容</label>
+                <div class="layui-input-block">
+                    <textarea placeholder="请输入内容" class="layui-textarea" lay-verify="required" style="height: 300px;" name="problemText" th:text="${feedback.problemText}"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="feedback">提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary" id="reset">重置</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <script src="../static/layui.all.js"></script>
+    <script src="../static/jQuery/jquery-2.2.3.min.js"></script>
+
+    <script>
+        layui.use(['form', 'layedit', 'laydate', 'upload'], function(){
+            var form = layui.form;
+            var layer = layui.layer;
+            var $ = layui.$;
+            var laydate = layui.laydate;
+            var upload = layui.upload;
+
+            laydate.render({
+                elem: '#requireDate'
+            });
+
+            //多图片上传
+            upload.render({
+                elem: '#uploadImg'
+                //,url: 'https://httpbin.org/post' //改成您自己的上传接口
+                ,multiple: true
+                ,before: function(obj){
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function(index, file, result){
+                        $('#showImg').append('<img src="'+ result +'" alt="'+ file.name +'" class="layui-upload-img layui-input-inline" style="width: 100px; height: 100px;">')
+                    });
+                }
+                ,done: function(res){
+                    //上传完毕
+                }
+            });
+
+            //监听提交
+            form.on('submit(feedback)', function(data){
+                var json = data.field;
+
+                console.log(json);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/worklog/feedback/edit',
+                    data: json,
+                    success: function(data){
+                        if (data.result){
+                            /*$("#id").val();
+                            $("#name").val();
+                            $("#telNo").val();
+                            $("#areaName").val();
+                            $("#email").val();
+                            $("#version").val();
+                            $("#problemText").val();*/
+
+                            if (data.code==100){
+                                layer.alert("客户反馈单添加成功");
+                                $("#reset").click();
+                            }else if (data.code==200){
+                                window.parent.location.reload();
+                                var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+                                parent.layer.close(index);
+                            }
+                        }else {
+                            layer.alert(data.msg, {
+                                title: '新增客户反馈单'
+                            })
+                        }
+                    },
+                    error: function (data) {
+                        var msg = data.msg;
+                        if (msg==''||msg==null||msg==undefined){
+                            msg = '后台连接出现异常，请重试';
+                        }
+
+                        layer.alert(msg, {
+                            title: '新增客户反馈单警告'
+                        })
+                    }
+                });
+
+                /*layer.alert(JSON.stringify(data.field), {
+                    title: '最终的提交信息'
+                })*/
+                return false;
+            });
+        });
+
+        function customerFilter() {
+            layer.open({
+                type: 2,
+                area: ['1000px', '600px'],
+                fixed: false,
+                maxmin: true,
+                content: ['/worklog/select/toSelectTable?tableUrl=/worklog/select/findCustomer', 'no']
+            });
+        }
+
+    </script>
+</body>
+</html>

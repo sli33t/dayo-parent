@@ -1,0 +1,151 @@
+package cn.caishen.worklog.service.testTask.impl;
+
+import cn.caishen.domain.utils.LbMap;
+import cn.caishen.worklog.constant.FeedbackConstant;
+import cn.caishen.worklog.dao.DevTaskDao;
+import cn.caishen.worklog.dao.FeedbackDao;
+import cn.caishen.worklog.dao.TestTaskDao;
+import cn.caishen.domain.domain.po.DevTask;
+import cn.caishen.domain.domain.po.TestTask;
+import cn.caishen.worklog.service.testTask.TestTaskService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+@Service
+public class TestTaskServiceImpl implements TestTaskService {
+
+    @Autowired
+    private TestTaskDao testTaskDao;
+
+    @Autowired
+    private FeedbackDao feedbackDao;
+
+    @Autowired
+    private DevTaskDao devTaskDao;
+
+    /**
+     * 查询测试任务
+     * @param page
+     * @param limit
+     * @param param
+     * @return
+     */
+    @Override
+    public PageInfo<LbMap> findAll(int page, int limit, LbMap param) {
+        PageHelper.startPage(page, limit);
+        List<LbMap> list = testTaskDao.findAll(param);
+        return new PageInfo(list);
+    }
+
+    @Override
+    public TestTask findById(String testTaskId) {
+        return testTaskDao.selectById(testTaskId);
+    }
+
+    /**
+     * 更新测试任务
+     * @param testTask
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void update(TestTask testTask) throws Exception{
+        testTask.setTestArrange(1);
+        testTask.setFinished(0);
+
+        QueryWrapper<TestTask> wrapper = new QueryWrapper<>();
+        wrapper.eq("TESTTASK_ID", testTask.getTesttaskId());
+        wrapper.and(Wrapper -> Wrapper.eq("TEST_ARRANGE", 0).or().isNull("TEST_ARRANGE"));
+        if (testTaskDao.update(testTask, wrapper)!=1){
+            throw new Exception("更新测试任务时失败，该测试任务已经分配");
+        }
+
+        if (feedbackDao.updateStatus(testTask.getFeedbackId(), FeedbackConstant.FEEDBACK_STATUS_6)!=1){
+            throw new Exception("更新客反状态时失败");
+        }
+
+        DevTask devTask = new DevTask();
+        devTask.setDevtaskId(testTask.getDevtaskId());
+        devTask.setTestReceived(1);
+        QueryWrapper<DevTask> devWrapper = new QueryWrapper<>();
+        devWrapper.eq("DEVTASK_ID", testTask.getDevtaskId());
+        devWrapper.and(Wrapper -> Wrapper.eq("TEST_RECEIVED", 0).or().isNull("TEST_RECEIVED"));
+        if (devTaskDao.updateById(devTask)!=1){
+            throw new Exception("更新开发任务时失败，该测试任务已经分配");
+        }
+    }
+
+    @Override
+    public int findTestFinishCount(String userId) {
+        LbMap map = testTaskDao.findTestFinishCount(userId);
+        if (map!=null&&map.size()>0){
+            return map.getInt("count");
+        }
+        return 0;
+    }
+
+    @Override
+    public PageInfo<LbMap> findDevFinish(int page, int limit, LbMap param) {
+        PageHelper.startPage(page, limit);
+        List<LbMap> list = testTaskDao.findDevFinish(param);
+        return new PageInfo(list);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateTestBack(String testtaskId, Integer feedbackId) throws Exception {
+        TestTask testTask = new TestTask();
+        //testTask.setTesttaskId(testtaskId);
+        testTask.setFinished(2);
+        testTask.setTestArrange(0);
+
+        SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        testTask.setFinishTime(dateTimeFormat.parse(dateTimeFormat.format(new Date())));
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        testTask.setFinishDate(dateFormat.parse(dateFormat.format(new Date())));
+
+        testTask.setTestText("测试退回");
+
+        QueryWrapper<TestTask> wrapper = new QueryWrapper<>();
+        wrapper.eq("TESTTASK_ID", testtaskId);
+        wrapper.and(Wrapper -> Wrapper.eq("FINISHED", 0).or().isNull("FINISHED"));
+        if (testTaskDao.update(testTask, wrapper)!=1){
+            throw new Exception("测试退回失败，请刷新重试");
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateTestFinish(TestTask testTask) throws Exception {
+        testTask.setFinished(1);
+
+        SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date time = dateTimeFormat.parse(dateTimeFormat.format(new Date()));
+        Date date = dateFormat.parse(dateFormat.format(new Date()));
+
+        testTask.setFinishTime(time);
+        testTask.setFinishDate(date);
+
+        QueryWrapper<TestTask> testWrapper =  new QueryWrapper<>();
+        testWrapper.eq("TESTTASK_ID", testTask.getTesttaskId());
+        testWrapper.and(Wrapper -> Wrapper.eq("FINISHED", 0).or().isNull("FINISHED"));
+        if (testTaskDao.update(testTask, testWrapper)!=1){
+            throw new Exception("测试完成失败！");
+        }
+
+        //更新客反状态为已经测试完成
+        if (feedbackDao.updateStatus(testTask.getFeedbackId(), FeedbackConstant.FEEDBACK_STATUS_7)!=1){
+            throw new Exception("更新客反状态失败！");
+        }
+    }
+}

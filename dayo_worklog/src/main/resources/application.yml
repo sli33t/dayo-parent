@@ -1,0 +1,85 @@
+server:
+  port: 9002
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:9000/eureka/
+    registry-fetch-interval-seconds: 5
+
+spring:
+  thymeleaf:
+    mode: HTML
+    encoding: UTF-8
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    servlet:
+      content-type: text/html
+
+  main:
+    allow-bean-definition-overriding: true
+
+  mvc:
+    static-path-pattern: /static/**
+
+
+  application:
+    name: dayo-worklog
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/worklog?serverTimezone=UTC
+    username: root
+    password: 123456
+
+  aop:
+    auto: true
+    proxy-target-class: true
+
+  rabbitmq:
+    host: 127.0.0.1
+    username: admin
+    password: admin
+    port: 5672
+    virtual-host: worklog
+
+  http:
+    encoding:
+      enabled: true
+      charset: utf-8
+      force: true
+
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password:
+    timeout: 10000ms  #redis请求超时时间，超过此值redis自动断开连接
+    jedis:
+      pool:
+        max-active: 32 #jedis最大连接数，超过此值则提示获取不到连接异常
+        max-wait: 100ms #jedis最大等待时间，超过此值会提示连接超时异常
+        max-idle: 32 #jedis最大等待连接数
+        min-idle: 0 #jedis最小等待连接数
+
+mybatis-plus:
+  configuration:
+    #还是把结果日志打印出来，方便查询bug
+    log-impl: org.apache.ibatis.logging.log4j2.Log4j2Impl
+    #因为有LbMap，所以null的全部显示
+    call-setters-on-nulls: true
+
+
+myfile:
+  tempFilePath: D:/fileRepository/temp
+  myFolderPath: D:/fileRepository/file
+
+#feign的配置，连接超时及读取超时配置
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: basic

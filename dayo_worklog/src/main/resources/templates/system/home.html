@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>工作日志</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" href="../worklog/static/css/layui.css">
+    <style>
+        .height{
+            height: 150px !important;
+        }
+
+        .big-font{
+            font-size: 36px;
+            color: #666;
+            line-height: 36px;
+            padding: 5px 0 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: break-all;
+            white-space: nowrap;
+            margin: 10px 20px;
+        }
+
+        .small-font{
+            font-size: 18px;
+            color: #8D8D8D;
+            line-height: 36px;
+            padding: 1px 0px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: break-all;
+            white-space: nowrap;
+            margin: 10px 0px;
+            position: absolute;
+            right: 0px;
+        }
+
+        .smallRate-font{
+            font-size: 12px;
+            color: #8D8D8D;
+            line-height: 36px;
+            padding: 25px 0px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: break-all;
+            white-space: nowrap;
+            margin: 10px 0px;
+            position: absolute;
+            right: 0px;
+        }
+
+        .span-color{
+            font-size: 14px;
+            position: absolute;
+            right: 35px;
+        }
+
+        .width-height{
+            width: 100%;height:300px;
+        }
+
+        .width{
+            width: 30% !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="layui-body" style="position: unset !important;" >
+        <!-- 内容主体区域 -->
+        <div class="layui-form-item">
+            <div style="padding: 20px; background-color: #F2F2F2;">
+                <!--快捷面板-->
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md4">
+                        <div class="layui-card">
+                            <div class="layui-card-header">
+                                开发进度
+                            </div>
+                            <div class="layui-card-body height">
+                                <div class="layui-form-item">
+                                    <div class="layui-input-inline">
+                                        <div id="devCount" class="big-font"></div>
+                                    </div>
+                                    <div class="layui-input-inline width">
+                                        <div id="devFinishCount" class="small-font"></div>
+                                    </div>
+                                    <div class="layui-input-inline width">
+                                        <div id="devRate" class="smallRate-font"></div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-form-item">
+                                    <div class="layui-progress layui-progress-big" lay-showpercent="true" lay-filter="devRate">
+                                        <div class="layui-progress-bar layui-bg-blue" lay-percent="0%"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md4">
+                        <div class="layui-card">
+                            <div class="layui-card-header" >
+                                测试进度
+                            </div>
+                            <div class="layui-card-body height">
+                                <div class="layui-form-item">
+                                    <div class="layui-input-inline">
+                                        <div id="testCount" class="big-font"></div>
+                                    </div>
+                                    <div class="layui-input-inline width">
+                                        <div id="testFinishCount" class="small-font"></div>
+                                    </div>
+                                    <div class="layui-input-inline width">
+                                        <div id="testRate" class="smallRate-font"></div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-form-item">
+                                    <div class="layui-progress layui-progress-big" lay-showpercent="true" lay-filter="testRate">
+                                        <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md4">
+                        <div class="layui-card">
+                            <div class="layui-card-header" >
+                                整体进度
+                            </div>
+                            <div class="layui-card-body height">
+                                <div class="layui-form-item">
+                                    <div class="layui-input-inline">
+                                        <div id="allCount" class="big-font"></div>
+                                    </div>
+                                    <div class="layui-input-inline width">
+                                        <div id="allFinishCount" class="small-font"></div>
+                                    </div>
+                                    <div class="layui-input-inline width">
+                                        <div id="allRate" class="smallRate-font"></div>
+                                    </div>
+                                </div>
+
+                                <div class="layui-form-item">
+                                    <div class="layui-progress layui-progress-big" lay-showpercent="true" lay-filter="allRate" style="margin-bottom: 20px;">
+                                        <div class="layui-progress-bar layui-bg-orange" lay-percent="0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div style="padding: 20px; background-color: #F2F2F2;">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md4">
+                        <div class="layui-card">
+                            <div class="layui-card-header">
+                                往年BUG数对比
+                            </div>
+                            <div class="layui-card-body">
+                                <div id="mainBug" class="width-height"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md4">
+                        <div class="layui-card">
+                            <div class="layui-card-header">
+                                往年需求数对比
+                            </div>
+                            <div class="layui-card-body">
+                                <div id="mainNeed" class="width-height"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md4">
+                        <div class="layui-card">
+                            <div class="layui-card-header">
+                                需求错误占比
+                            </div>
+                            <div class="layui-card-body">
+                                <div id="mainNeedAndBug" class="width-height"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <div style="padding: 20px; background-color: #F2F2F2;">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md6">
+                        <div class="layui-card">
+                            <div class="layui-card-header">
+                                优先级统计
+                            </div>
+                            <div class="layui-card-body">
+                                <div id="mainPriority" class="width-height"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md6">
+                        <div class="layui-card">
+                            <div class="layui-card-header">
+                                各版本问题数
+                            </div>
+                            <div class="layui-card-body">
+                                <div id="mainVersion" class="width-height"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--<script src="../worklog/static/layui.all.js" charset="utf-8"></script>-->
+    <script src="../worklog/static/layui.js" charset="utf-8"></script>
+    <script src="../worklog/static/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="../worklog/static/echarts/echarts.min.js"></script>
+
+    <script>
+        var thisYear = '';
+        var thisYear0 = '';  //需求
+        var thisYear1 = '';  //bug
+
+        var lastYear = '';
+        var lastYear0 = '';
+        var lastYear1 = '';
+
+        var beforeLastYear = '';
+        var beforeLastYear0 = '';
+        var beforeLastYear1 = '';
+
+        var need0 = '';  //内部需求
+        var bug0 = '';   //内部BUG
+        var need1 = '';  //客户需求
+        var bug1 = '';   //客户BUG
+
+        var priority0 = '';
+        var priority1 = '';
+        var priority2 = '';
+        var priority3 = '';
+
+        var titles = [];
+        var values = [];
+        var versionList = [];
+
+        layui.use('element', function() {
+            var $ = layui.jquery;
+            var element = layui.element;
+            var devRate = '';
+            var testRate = '';
+            var allRate = '';
+
+            $(function () {// 初始化内容
+                $.ajax({
+                    type: 'GET',
+                    url: '/worklog/getAnalysis',
+                    data: {},
+                    success: function (data) {
+                        if (data.result) {
+                            console.log(data);
+                            $("#devCount").html(data.devCount);
+                            $("#devFinishCount").html('完成 ' + data.devFinishCount);
+                            $("#devRate").html('完成率 '+data.devRate+'%');
+                            $("#testCount").html(data.testCount);
+                            $("#testFinishCount").html('完成 ' + data.testFinishCount);
+                            $("#testRate").html('完成率 '+data.testRate+'%');
+                            $("#allCount").html(data.allCount);
+                            $("#allFinishCount").html('完成 ' + data.allFinishCount);
+                            $("#allRate").html('完成率 '+data.allRate+'%');
+
+                            devRate = data.devRate;
+                            testRate = data.testRate;
+                            allRate = data.allRate;
+
+                            thisYear = data.thisYear;
+                            thisYear0 = data.thisYear0;
+                            thisYear1 = data.thisYear1;
+
+                            lastYear = data.lastYear;
+                            lastYear0 = data.lastYear0;
+                            lastYear1 = data.lastYear1;
+
+                            beforeLastYear = data.beforeLastYear;
+                            beforeLastYear0 = data.beforeLastYear0;
+                            beforeLastYear1 = data.beforeLastYear1;
+
+                            need0 = data.NEED0;
+                            bug0 = data.BUG0;
+                            need1 = data.NEED1;
+                            bug1 = data.BUG1;
+
+                            priority0 = data.PRIORITY0;
+                            priority1 = data.PRIORITY1;
+                            priority2 = data.PRIORITY2;
+                            priority3 = data.PRIORITY3;
+
+                            console.log(devRate + "||" + testRate + "||" + allRate);
+
+                            versionList = data.versionList;
+                            console.log(versionList);
+
+                            for(var i=0;i<versionList.length;i++) {
+                                titles[i] = versionList[i].name;
+                                values[i] = versionList[i].value;
+                            }
+
+                            console.log(titles);
+
+                        } else {
+                            //不进行提示
+                        }
+                    },
+                    error: function (data) {
+                        var msg = data.msg;
+                        if (msg == '' || msg == null || msg == undefined) {
+                            msg = '后台连接出现异常，请重试';
+                        }
+
+                        layer.alert(msg, {
+                            title: '查询数据警告'
+                        })
+                    }
+                });
+            });
+
+            //延时加载才可以赋值
+            setTimeout(function(){
+                element.progress('devRate', devRate+'%');
+                element.progress('testRate', testRate +'%');
+                element.progress('allRate', allRate +'%');
+            }, 500);
+        });
+
+        setTimeout(function() {
+            var myChart = echarts.init(document.getElementById('mainBug'));
+            var option = {
+                legend: {},
+                tooltip: {},
+                dataset: {
+                    source: [
+                        ['product', beforeLastYear, lastYear, thisYear],
+                        ['错误', beforeLastYear1, lastYear1, thisYear1]
+                    ]
+                },
+                xAxis: {type: 'category'},
+                yAxis: {},
+                series: [
+                    {type: 'bar'},
+                    {type: 'bar'},
+                    {type: 'bar'}
+                ]
+            };
+            myChart.setOption(option);
+
+            var myChart1 = echarts.init(document.getElementById('mainNeed'));
+            var option1 = {
+                legend: {},
+                tooltip: {},
+                dataset: {
+                    source: [
+                        ['product', beforeLastYear, lastYear, thisYear],
+                        ['需求', beforeLastYear0, lastYear0, thisYear0]
+                    ]
+                },
+                xAxis: {type: 'category'},
+                yAxis: {},
+                series: [
+                    {type: 'bar'},
+                    {type: 'bar'},
+                    {type: 'bar'}
+                ]
+            };
+            myChart1.setOption(option1);
+
+            var myChart2 = echarts.init(document.getElementById('mainNeedAndBug'));
+            var option2 = {
+                title: {
+                    text: '需求/错误',
+                    subtext: '比率',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b} : {c} ({d}%)'
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                    data: ['内部需求', '客户需求', '内部问题', '客户问题']
+                },
+                series: [
+                    {
+                        name: '需求/错误',
+                        type: 'pie',
+                        radius: '55%',
+                        center: ['50%', '60%'],
+                        data: [
+                            {value: need0, name: '内部需求'},
+                            {value: bug0, name: '内部问题'},
+                            {value: need1, name: '客户需求'},
+                            {value: bug1, name: '客户问题'}
+                        ],
+                        emphasis: {
+                            itemStyle: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            };
+            myChart2.setOption(option2);
+
+
+            var myChart3 = echarts.init(document.getElementById('mainPriority'));
+            var option3 = {
+                title: {
+                    text: '优先级',
+                    subtext: '比率',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b} : {c} ({d}%)'
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                    data: ['紧急', '高', '中', '低']
+                },
+                series: [
+                    {
+                        name: '优先级',
+                        type: 'pie',
+                        radius: '55%',
+                        center: ['50%', '60%'],
+                        data: [
+                            {value: priority0, name: '紧急'},
+                            {value: priority1, name: '高'},
+                            {value: priority2, name: '中'},
+                            {value: priority3, name: '低'}
+                        ],
+                        emphasis: {
+                            itemStyle: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            };
+            myChart3.setOption(option3);
+
+
+            var myChart4 = echarts.init(document.getElementById('mainVersion'));
+            var option4 = {
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: titles
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    data: values,
+                    type: 'line',
+                    areaStyle: {}
+                }]
+            };
+
+            myChart4.setOption(option4);
+        }, 500);
+    </script>
+</body>
+</html>
