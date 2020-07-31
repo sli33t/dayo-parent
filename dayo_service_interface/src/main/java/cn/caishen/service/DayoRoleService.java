@@ -1,4 +1,4 @@
-package cn.caishen.worklog.service.role;
+package cn.caishen.service;
 
 import cn.caishen.domain.utils.LbMap;
 import org.springframework.cloud.openfeign.FeignClient;

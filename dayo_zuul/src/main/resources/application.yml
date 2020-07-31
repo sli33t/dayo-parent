@@ -42,8 +42,8 @@ hystrix:
             timeoutInMilliseconds: 8000  #命令执行超时时间，默认1000ms
 
 ribbon:
-  ConnectTimeout: 500 # ribbon链接超时时长
-  ReadTimeout: 2000 # ribbon读取超时时长
+  ConnectTimeout: 5000 # ribbon链接超时时长
+  ReadTimeout: 5000 # ribbon读取超时时长
   MaxAutoRetries: 0  # 当前服务重试次数
   MaxAutoRetriesNextServer: 1 # 切换服务重试次数
   OkToRetryOnAllOperations: false # 是否对所有的请求方式都重试，只对get请求重试
@@ -54,7 +54,6 @@ ribbon:
 zuul:
   ignoredServices: '*' #忽略所有未配置的service
   ignore-security-headers: false  #不忽略框架与权限相关的头信息
-
   routes:
     dayo-worklog:
       path: /worklog/**
@@ -66,6 +65,11 @@ zuul:
       serviceId: dayo-system
       sensitiveHeaders: "*"
 
+    dayo-auth:
+      path: /auth/**
+      serviceId: dayo-auth
+      sensitiveHeaders: "*"
+
   host:
     maxTotalConnections: 10000
     maxPerRouteConnections: 10000
@@ -74,3 +78,5 @@ zuul:
 
   semaphore:
     max-semaphores: 200
+
+  sensitive-headers: #把默认的敏感头集合设置为空

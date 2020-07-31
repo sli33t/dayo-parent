@@ -255,4 +255,22 @@ public class UserController /*extends BaseController*/ {
         }
     }
 
+    /**
+     * 通过电话查询用户信息
+     * @param telNo
+     * @return
+     */
+    @GetMapping(value = "/findByTelNo")
+    public LbMap findByTelNo(String telNo){
+        try {
+            if (telNo.equals("")){
+                return LbMap.failResult("查询用户信息失败，没有找到用户编号！");
+            }
+
+            User user = userService.findByTelNo(telNo);
+            return LbMap.successResult("查询用户信息成功", JSONUtil.classToJsonString(user));
+        }catch (Exception e){
+            return LbMap.failResult("查询用户信息失败，"+e.getMessage());
+        }
+    }
 }

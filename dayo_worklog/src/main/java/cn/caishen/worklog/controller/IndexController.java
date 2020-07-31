@@ -3,10 +3,11 @@ package cn.caishen.worklog.controller;
 import cn.caishen.domain.domain.po.User;
 import cn.caishen.domain.utils.JSONUtil;
 import cn.caishen.domain.utils.LbMap;
+import cn.caishen.service.DayoAuthService;
+import cn.caishen.service.DayoUserService;
 import cn.caishen.worklog.service.analysis.AnalysisService;
 import cn.caishen.worklog.service.devTask.DevTaskService;
 import cn.caishen.worklog.service.testTask.TestTaskService;
-import cn.caishen.worklog.service.user.DayoUserService;
 import cn.caishen.worklog.utils.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,6 +36,9 @@ public class IndexController extends BaseController {
     @Autowired
     private AnalysisService analysisService;
 
+    @Autowired
+    private DayoAuthService dayoAuthService;
+
     @Value("${server.port}")
     private Integer port;
 
@@ -43,19 +47,26 @@ public class IndexController extends BaseController {
      * @return
      */
     @GetMapping(value = "/toIndex")
-    public ModelAndView toIndex(){
+    public ModelAndView toIndex() throws Exception {
         ModelAndView mv = new ModelAndView();
 
         int devCount = devTaskService.findDevFinishCount(this.user.getUserId());
 
         int testCount = testTaskService.findTestFinishCount(this.user.getUserId());
 
-        mv.setViewName("system/index");
-        mv.addObject("user", user);
-        mv.addObject("devCount", devCount);
-        mv.addObject("testCount", testCount);
-        mv.addObject("port", port);
-        return mv;
+        /*String userStr = JSONUtil.classToJsonString(user);
+        LbMap tokenMap = dayoAuthService.setToken(userStr);
+        if (tokenMap!=null){*/
+            mv.setViewName("system/index");
+            mv.addObject("user", user);
+            mv.addObject("devCount", devCount);
+            mv.addObject("testCount", testCount);
+            mv.addObject("port", port);
+            return mv;
+        /*}else {
+            mv.setViewName("worklog/system/error");
+            return mv;
+        }*/
     }
 
     /**

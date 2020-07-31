@@ -158,4 +158,16 @@ public class UserServiceImpl implements UserService {
     public List<LbMap> findRoleByUserId(String userId) {
         return userDao.findRoleByUserId(userId);
     }
+
+    /**
+     * 根据电话查询用户信息
+     * @param telNo
+     * @return
+     */
+    @Override
+    public User findByTelNo(String telNo) {
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq("TEL_NO", telNo);
+        return userDao.selectOne(wrapper);
+    }
 }

@@ -1,4 +1,4 @@
-package cn.caishen.worklog.service.user;
+package cn.caishen.service;
 
 import cn.caishen.domain.utils.LbMap;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -30,4 +30,6 @@ public interface DayoUserService {
     @PostMapping(value = "/userService/update")
     LbMap update(@RequestParam("user") String user, @RequestParam("useRowVersion") boolean useRowVersion);
 
+    @GetMapping(value = "/userService/findByTelNo")
+    LbMap findByTelNo(@RequestParam("telNo") String telNo);
 }

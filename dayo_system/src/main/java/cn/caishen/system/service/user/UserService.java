@@ -67,4 +67,11 @@ public interface UserService {
      * @return
      */
     List<LbMap> findRoleByUserId(String userId);
+
+    /**
+     * 通过电话查询用户
+     * @param telNo
+     * @return
+     */
+    User findByTelNo(String telNo);
 }

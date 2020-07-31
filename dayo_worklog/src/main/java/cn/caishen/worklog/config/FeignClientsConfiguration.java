@@ -1,7 +1,8 @@
 package cn.caishen.worklog.config;
 
-import cn.caishen.worklog.service.role.DayoRoleService;
-import cn.caishen.worklog.service.user.DayoUserService;
+import cn.caishen.service.DayoAuthService;
+import cn.caishen.service.DayoRoleService;
+import cn.caishen.service.DayoUserService;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import org.springframework.cloud.openfeign.EnableFeignClients;
@@ -14,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 
 @Configuration
-@EnableFeignClients(clients = {DayoUserService.class, DayoRoleService.class})
+@EnableFeignClients(clients = {DayoUserService.class, DayoRoleService.class, DayoAuthService.class})
 public class FeignClientsConfiguration implements RequestInterceptor {
 
 

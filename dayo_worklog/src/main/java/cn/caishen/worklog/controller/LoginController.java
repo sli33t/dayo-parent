@@ -1,18 +1,14 @@
 package cn.caishen.worklog.controller;
 
 import cn.caishen.domain.domain.po.User;
+import cn.caishen.domain.utils.JSONUtil;
 import cn.caishen.domain.utils.LbMap;
+import cn.caishen.service.DayoAuthService;
 import cn.caishen.worklog.config.RabbitProperties;
 import cn.caishen.worklog.constant.MQConstant;
-import cn.caishen.worklog.utils.MD5Util;
-import com.alibaba.fastjson.JSON;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,13 +25,16 @@ public class LoginController {
 
     //private final static Logger logger = (Logger) LoggerFactory.getLogger(LoginController.class);
 
-    protected static Logger logger = LogManager.getLogger(BaseController.class);
+    protected static Logger logger = LogManager.getLogger(LoginController.class);
 
     /*@Autowired
     private Environment environment;*/
 
     @Autowired
     private RabbitProperties rabbitProperties;
+
+    @Autowired
+    private DayoAuthService dayoAuthService;
 
     /**
      * 跳转登录页面
@@ -55,7 +54,7 @@ public class LoginController {
      * @param request
      * @return
      */
-    @PostMapping(value = "/login")
+    /*@PostMapping(value = "/login")
     public LbMap login(String telNo, String password, HttpServletRequest request) {
         if (StringUtils.isEmpty(telNo)||StringUtils.isEmpty(password)){
             return LbMap.failResult("用户名或者密码不能为空！");
@@ -72,11 +71,11 @@ public class LoginController {
                 session.setAttribute("user", userStr);
 
                 LbMap rabbitMap = new LbMap();
-                /*String rbHost = environment.getProperty("spring.rabbitmq.host");
+                *//*String rbHost = environment.getProperty("spring.rabbitmq.host");
                 String rbPort = environment.getProperty("spring.rabbitmq.port");
                 String rbUsername = environment.getProperty("spring.rabbitmq.username");
                 String rbPassword = environment.getProperty("spring.rabbitmq.password");
-                String rbVirtualHost = environment.getProperty("spring.rabbitmq.virtual-host");*/
+                String rbVirtualHost = environment.getProperty("spring.rabbitmq.virtual-host");*//*
 
                 String rbHost = rabbitProperties.getHost();
                 Integer rbPort = rabbitProperties.getPort();
@@ -98,6 +97,44 @@ public class LoginController {
                 logger.info("登录失败："+token.getUsername()+"，密码："+ MD5Util.md5(password));
                 return LbMap.failResult("用户名不存在");
             }
+        }catch (Exception e){
+            logger.info("登录失败："+e.getMessage());
+            return LbMap.failResult("登录失败："+e.getMessage());
+        }
+    }*/
+
+
+    @PostMapping(value = "/login")
+    public LbMap login(String telNo, String password, HttpServletRequest request){
+        try {
+            LbMap lbMap = dayoAuthService.loginAuth(telNo, password);
+
+            if (!lbMap.getBoolean("result")){
+                return lbMap;
+            }
+
+            User user = JSONUtil.jsonStringToClass(lbMap.getString("data"), User.class);
+            logger.info("登录成功："+user.toString());
+
+            LbMap rabbitMap = new LbMap();
+
+            String rbHost = rabbitProperties.getHost();
+            Integer rbPort = rabbitProperties.getPort();
+            String rbUsername = rabbitProperties.getUsername();
+            String rbPassword = rabbitProperties.getPassword();
+            String rbVirtualHost = rabbitProperties.getVirtualhost();
+
+            rabbitMap.put("rbHost", rbHost);
+            rabbitMap.put("rbPort", rbPort);
+            rabbitMap.put("rbUsername", rbUsername);
+            rabbitMap.put("rbPassword", rbPassword);
+            rabbitMap.put("rbVirtualHost", rbVirtualHost);
+
+            HttpSession session = request.getSession();
+            session.setAttribute(MQConstant.RABBIT_MQ_SETTING, rabbitMap.toString());
+            session.setAttribute("user", user);
+
+            return lbMap;
         }catch (Exception e){
             logger.info("登录失败："+e.getMessage());
             return LbMap.failResult("登录失败："+e.getMessage());
