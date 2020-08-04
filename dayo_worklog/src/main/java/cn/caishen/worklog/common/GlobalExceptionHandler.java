@@ -15,12 +15,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     public ModelAndView processException(Exception e){
         ModelAndView mv = new ModelAndView();
-        mv.setViewName("/worklog/system/error");
+        mv.setViewName("system/error");
 
         if (e instanceof UndeclaredThrowableException){
             mv.addObject("errorMsg", e.getCause().getMessage());
         }else if (e instanceof LoginException){
-            mv.setViewName("/worklog/system/login");
+            mv.setViewName("system/login");
         }else {
             mv.addObject("errorMsg", e.getMessage());
         }
