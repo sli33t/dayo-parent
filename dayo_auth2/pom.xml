@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>cn.caishen</groupId>
+    <artifactId>dayo_parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>dayo_auth2</artifactId>
+
+  <name>dayo_auth2</name>
+  <url>http://maven.apache.org</url>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  <dependencies>
+  
+	<dependency>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter-web</artifactId>
+        <exclusions><!-- 去掉默认配置 -->  
+            <exclusion>  
+                <groupId>org.springframework.boot</groupId>  
+                <artifactId>spring-boot-starter-logging</artifactId>  
+            </exclusion>            
+        </exclusions>  	 	    
+	</dependency>  
+	
+
+	<dependency>
+	    <groupId>org.springframework.cloud</groupId>
+	    <artifactId>spring-cloud-starter-oauth2</artifactId>
+	</dependency>
+	
+	<dependency>
+		<groupId>org.springframework.security.oauth</groupId>
+		<artifactId>spring-security-oauth2</artifactId>
+		<!-- 指明版本，解决redis存储出现的问题：java.lang.NoSuchMethodError: org.springframework.data.redis.connection.RedisConnection.set([B[B)V问题 -->
+		<version>2.3.5.RELEASE</version>
+	</dependency>
+	
+	<dependency>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter-data-redis</artifactId>
+	</dependency>
+	
+	<dependency>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter-actuator</artifactId>
+	</dependency> 	
+
+    <dependency>     
+        <groupId>org.springframework.boot</groupId>     
+        <artifactId>spring-boot-devtools</artifactId>     
+    </dependency>        
+
+ 	<dependency>
+    	<groupId>mysql</groupId>
+	    <artifactId>mysql-connector-java</artifactId>
+	</dependency>
+	
+	<dependency>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter-jdbc</artifactId>
+	</dependency> 
+		  
+     <!-- dependency>
+         <groupId>org.mybatis</groupId>
+         <artifactId>mybatis</artifactId>
+		<version>3.3.0</version>
+     </dependency -->    
+     
+        <!-- mybatis plus -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.1.2</version>
+        </dependency>                        
+
+     <!-- perf4j 是一套简单的服务监控框架，可以用来做一些系统常需要的监控，比如实时系统吞吐量，系统响应时间 -->
+     <dependency>
+         <groupId>org.perf4j</groupId>
+         <artifactId>perf4j</artifactId>
+         <version>0.9.16</version>
+     </dependency>	 
+     
+    <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>druid</artifactId>
+        <version>1.1.12</version>
+    </dependency>   
+    
+    <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+    </dependency>     
+	 			
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+    </dependency>	
+    
+    <dependency>
+        <groupId>cn.caishen</groupId>
+        <artifactId>dayo_domain</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </dependency>    	
+    
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+    
+  </dependencies>
+  
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>  
+</project>
