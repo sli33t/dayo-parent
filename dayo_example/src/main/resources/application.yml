@@ -1,0 +1,25 @@
+logging:
+  level:
+    root: info
+    org.springframework: info  
+
+spring:
+  application:
+    name: dayo-example  
+  redis:
+    host: 127.0.0.1
+    password: 
+    port: 6379
+    pool:
+      max-idle: 100
+      min-idle: 1
+      max-active: 1000
+      max-wait: -1     
+server:
+  port: 5002
+  
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:9000/eureka/
+  
