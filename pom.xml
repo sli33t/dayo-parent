@@ -16,7 +16,9 @@
         <module>dayo_domain</module>
         <module>dayo_auth</module>
         <module>dayo_service_interface</module>
-    </modules>
+    	<module>dayo_auth2</module>
+    	<module>dayo_example</module>
+  </modules>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
