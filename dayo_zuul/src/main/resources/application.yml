@@ -69,6 +69,16 @@ zuul:
       path: /auth/**
       serviceId: dayo-auth
       sensitiveHeaders: "*"
+    
+    dayo-auth2:
+      path: /uaa/**
+      serviceId: dayo-auth2
+      sensitiveHeaders: "*"    
+      
+    dayo-example:
+      path: /example/**
+      serviceId: dayo-example
+      sensitiveHeaders: "*"            
 
   host:
     maxTotalConnections: 10000
