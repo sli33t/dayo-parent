@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface DayoAuth2Service {
 
     @PostMapping(value = "/oauth/token")
-    LbMap loginAuth2(@RequestParam("telNo") String telNo, @RequestParam("password") String password,
+    LbMap loginAuth2(@RequestParam("username") String telNo, @RequestParam("password") String password,
                      @RequestParam(value = "grant_type", defaultValue = "password") String grant_type,
                      @RequestParam(value = "client_id", defaultValue = "myapp") String client_id,
                      @RequestParam(value = "scope", defaultValue = "all") String scope,
