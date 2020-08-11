@@ -3,6 +3,7 @@ package cn.caishen.worklog.controller;
 import cn.caishen.domain.domain.po.User;
 import cn.caishen.domain.utils.JSONUtil;
 import cn.caishen.domain.utils.LbMap;
+import cn.caishen.service.DayoAuth2Service;
 import cn.caishen.service.DayoAuthService;
 import cn.caishen.worklog.config.RabbitProperties;
 import cn.caishen.worklog.constant.MQConstant;
@@ -35,6 +36,9 @@ public class LoginController {
 
     @Autowired
     private DayoAuthService dayoAuthService;
+
+    @Autowired
+    private DayoAuth2Service dayoAuth2Service;
 
     /**
      * 跳转登录页面
@@ -104,7 +108,7 @@ public class LoginController {
     }*/
 
 
-    @PostMapping(value = "/login")
+    /*@PostMapping(value = "/login")
     public LbMap login(String telNo, String password, HttpServletRequest request){
         try {
             LbMap lbMap = dayoAuthService.loginAuth(telNo, password);
@@ -139,6 +143,13 @@ public class LoginController {
             logger.info("登录失败："+e.getMessage());
             return LbMap.failResult("登录失败："+e.getMessage());
         }
+    }*/
+
+
+    @PostMapping(value = "/login")
+    public LbMap login(String telNo, String password, HttpServletRequest request) throws Exception {
+        LbMap lbMap = dayoAuth2Service.loginAuth2(telNo, password, "password", "myapp", "all", "lxapp");
+        return lbMap;
     }
 
     /**

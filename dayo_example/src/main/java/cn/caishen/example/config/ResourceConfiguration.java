@@ -41,6 +41,7 @@ public class ResourceConfiguration extends ResourceServerConfigurerAdapter {
 		http.authorizeRequests()
 				.antMatchers(HttpMethod.POST, "/user/**").permitAll()
 				.antMatchers("/order/*").permitAll()
+				.antMatchers("/worklog/*").permitAll()
 				.and().authorizeRequests()
 				.antMatchers(HttpMethod.OPTIONS).permitAll()
 				.anyRequest().authenticated();

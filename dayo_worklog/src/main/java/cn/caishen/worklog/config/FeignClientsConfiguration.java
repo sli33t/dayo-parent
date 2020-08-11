@@ -1,5 +1,6 @@
 package cn.caishen.worklog.config;
 
+import cn.caishen.service.DayoAuth2Service;
 import cn.caishen.service.DayoAuthService;
 import cn.caishen.service.DayoRoleService;
 import cn.caishen.service.DayoUserService;
@@ -15,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 
 @Configuration
-@EnableFeignClients(clients = {DayoUserService.class, DayoRoleService.class, DayoAuthService.class})
+@EnableFeignClients(clients = {DayoUserService.class, DayoRoleService.class, DayoAuthService.class, DayoAuth2Service.class})
 public class FeignClientsConfiguration implements RequestInterceptor {
 
 
