@@ -11,16 +11,24 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/worklog?serverTimezone=UTC
     username: root
-    password: 123456
+    password: root
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:9000/eureka/
-    registry-fetch-interval-seconds: 5
-  instance:
-    ip-address: 127.0.0.1
-    prefer-ip-address: true
+#nacos两种配置方法：
+#nacos.discovery.server-addr=127.0.0.1:8848
+#spring.cloud.nacos.discovery.server-addr=127.0.0.1:8848
+
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:9000/eureka/
+#    registry-fetch-interval-seconds: 5
+#  instance:
+#    ip-address: 127.0.0.1
+#    prefer-ip-address: true
 
 dayo:
   jwt:

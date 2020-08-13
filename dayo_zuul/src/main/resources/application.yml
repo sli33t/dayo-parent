@@ -4,6 +4,11 @@ spring:
   application:
     name: dayo-zuul
 
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+
 #  redis:
 #    database: 0
 #    host: 127.0.0.1
@@ -17,12 +22,12 @@ spring:
 #        max-idle: 32 #jedis最大等待连接数
 #        min-idle: 0 #jedis最小等待连接数
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:9000/eureka/
-    registry-fetch-interval-seconds: 5
-    fetch-registry: true
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:9000/eureka/
+#    registry-fetch-interval-seconds: 5
+#    fetch-registry: true
 
 hystrix:
   threadpool:
@@ -47,8 +52,8 @@ ribbon:
   MaxAutoRetries: 0  # 当前服务重试次数
   MaxAutoRetriesNextServer: 1 # 切换服务重试次数
   OkToRetryOnAllOperations: false # 是否对所有的请求方式都重试，只对get请求重试
-  eureka:
-    enabled: true
+#  eureka:
+#    enabled: true
 
 
 zuul:

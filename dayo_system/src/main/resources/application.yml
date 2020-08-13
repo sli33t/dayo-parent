@@ -1,11 +1,11 @@
 server:
   port: 9003
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:9000/eureka/
-    registry-fetch-interval-seconds: 5
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:9000/eureka/
+#    registry-fetch-interval-seconds: 5
 
 spring:
   application:
@@ -18,7 +18,7 @@ spring:
       driver-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://localhost:3306/worklog?serverTimezone=UTC
       username: root
-      password: 123456
+      password: root
 
   redis:
     database: 0
@@ -32,3 +32,7 @@ spring:
         max-wait: 100ms #jedis最大等待时间，超过此值会提示连接超时异常
         max-idle: 32 #jedis最大等待连接数
         min-idle: 0 #jedis最小等待连接数
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848

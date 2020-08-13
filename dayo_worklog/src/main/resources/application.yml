@@ -1,11 +1,15 @@
 server:
   port: 9002
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:9000/eureka/
-    registry-fetch-interval-seconds: 5
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:9000/eureka/
+#    registry-fetch-interval-seconds: 5
+
+nacos:
+  discovery:
+    server-addr: 127.0.0.1:8848
 
 spring:
   thymeleaf:
@@ -16,6 +20,12 @@ spring:
     suffix: .html
     servlet:
       content-type: text/html
+
+  cloud:
+    nacos:
+      discovery:
+        #必须配置ip地址
+        server-addr: 127.0.0.1:8848
 
   main:
     allow-bean-definition-overriding: true
@@ -31,7 +41,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/worklog?serverTimezone=UTC
     username: root
-    password: 123456
+    password: root
 
   aop:
     auto: true

@@ -14,12 +14,17 @@ spring:
       max-idle: 100
       min-idle: 1
       max-active: 1000
-      max-wait: -1     
+      max-wait: -1
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
 server:
   port: 5002
   
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:9000/eureka/
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://localhost:9000/eureka/
   
